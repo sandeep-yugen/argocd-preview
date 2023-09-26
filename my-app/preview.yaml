@@ -5,12 +5,12 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - pullRequest:
+  - pullRequest:
       github:
         owner: sandeep-yugen
         repo: argocd-preview
-      labels:
-      - preview
+        labels:
+        - preview
   template:
     metadata:
       name: 'myapp-{{branch}}-{{number}}'
