@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: pr-environments
+  namespace: argocd
+spec:
+  generators:
+    - pullRequest:
+      github:
+        owner: sandeep-yugen
+        repo: argocd-preview
+      labels:
+      - preview
+  template:
+    metadata:
+      name: 'myapp-{{branch}}-{{number}}'
+    spec:
+      source:
+        repoURL: 'https://github.com/sandeep-yugen/argocd-preview.git'
+        targetRevision: '{{head_sha}}'
+        path: my-app/
+      project: default
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'pr-{{branch}}-{{number}}'
+      syncPolicy:
+        automated:
+          prune: true
+          allowEmpty: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
